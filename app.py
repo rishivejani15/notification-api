@@ -86,3 +86,5 @@ def send_notification_route():
     except Exception as e:
         # Handle any errors that occur during the notification process
         return jsonify({"status": "error", "message": str(e)}), 500
+if __name__ == '__main__':
+    app.run(debug=True)
