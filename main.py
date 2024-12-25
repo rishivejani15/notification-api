@@ -61,6 +61,7 @@ def send_notification(device_token, title, body, custom_data):
 
     # Send the POST request
     response = requests.post(url, headers=headers, json=payload)
+    print(response.json())
     return response.json()
 
 @app.route('/send_notification', methods=['POST'])
