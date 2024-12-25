@@ -1,15 +1,27 @@
-from flask import Flask, request, jsonify
+import os
+import base64
+import json
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
+from flask import Flask, request, jsonify
 import requests
 
 app = Flask(__name__)
 
 # Step 1: Get OAuth 2.0 Access Token
 def get_access_token():
-    # Load the credentials from the service account JSON file
-    credentials = service_account.Credentials.from_service_account_file(
-        'C:/Users/Rishi/Desktop/smart-pillbox/home/lib/final-year-project-6ebae-firebase-adminsdk-iua0u-fa43b06fef.json',
+    # Get the base64-encoded credentials from environment variables
+    credentials_base64 = os.getenv("FIREBASE_CREDENTIALS")
+    if not credentials_base64:
+        raise ValueError("Firebase credentials are not set in environment variables")
+
+    # Decode the base64 string and load it as JSON
+    credentials_json = base64.b64decode(credentials_base64).decode('utf-8')
+    credentials_dict = json.loads(credentials_json)
+
+    # Load the credentials from the decoded JSON
+    credentials = service_account.Credentials.from_service_account_info(
+        credentials_dict,
         scopes=['https://www.googleapis.com/auth/firebase.messaging']
     )
 
@@ -24,7 +36,7 @@ def send_notification(device_token, title, body, custom_data):
     access_token = get_access_token()  # Get the refreshed access token
 
     # Replace with your project ID
-    project_id = 'final-year-project-6ebae'
+    project_id = 'final-year-project-6ebae'  # Replace with your Firebase project ID
 
     # FCM v1 API endpoint
     url = f'https://fcm.googleapis.com/v1/projects/{project_id}/messages:send'
@@ -62,6 +74,7 @@ def send_notification_route():
     try:
         # Trigger the notification sending process
         response = send_notification(device_token, title, body, custom_data)
+        
         return jsonify({"status": "success", "response": response}), 200
     except Exception as e:
         # Handle any errors that occur during the notification process
