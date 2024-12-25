@@ -71,6 +71,12 @@ def send_notification_route():
     body = data.get('body')
     custom_data = data.get('custom_data', {})
 
+    # Validate if the required fields are present
+    if not device_token:
+        return jsonify({"status": "error", "message": "Missing device_token"}), 400
+    if not title or not body:
+        return jsonify({"status": "error", "message": "Missing title or body"}), 400
+
     try:
         # Trigger the notification sending process
         response = send_notification(device_token, title, body, custom_data)
