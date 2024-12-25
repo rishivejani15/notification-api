@@ -67,7 +67,7 @@ def send_notification(device_token, title, body, custom_data):
 @app.route('/send_notification', methods=['POST'])
 def send_notification_route():
     data = request.json
-    device_token = data.get('device_token')
+    device_token = "dcxeyWktSlGFIwetDW0io5:APA91bFFhD4PlijUGTUdeKUf31wAMP0kUQGKvCZQ3S7C3pGSLfzsRvX9siYoy94y4E_bVSzefzKqRlvDqofubJzxQMFQLr-VAHf9d8OQFbUJvJfZGAcDNQY"
     title = data.get('title')
     body = data.get('body')
     custom_data = data.get('custom_data', {})
